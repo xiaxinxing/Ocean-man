@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ocean.core.module.sys.mapper.UserMapper">
+    <select id="selectMenuList" resultType="com.ocean.core.module.sys.entity.Menu">
+
+        SELECT * FORM
+        sys_menu
+        WHERE
+        id IN (
+        SELECT menu_id FROM sys_role_menu WHERE role_id = ( SELECT role_id FROM sys_user_role WHERE user_id = #{userId}
+        LIMIT 1 )
+        )
+        <if test="null != menuType and ''!=menuType">
+            AND menu_type = #{menuType}
+
+        </if>
+        <if test="null != isEnabled and ''!=isEnabled">
+            AND is_enable = #{isEnabled}
+        </if>
+        <if test="null != name and ''!=name">
+            AND NAME like    '%' ||  #{name} || '%'
+        </if>
+        ORDER BY
+        create_time DESC
+
+    </select>
+
+    <select id="selectUserAndRoleByLoginName" resultType="com.ocean.core.module.sys.entity.User">
+        select u.*,r.id as roleId from sys_user as u left join sys_role as r on u.id=r.user_id limit 1
+    </select>
+</mapper>

@@ -1,0 +1,67 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.1.151:3307/ocean?serverTimezone=GMT%2B8&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      idle-timeout: 600000
+      maximum-pool-size: 50
+      minimum-idle: 10
+# rocketMq 配置
+---
+rocketmq:
+  name-server: 192.168.1.151:9876
+
+
+# activeMq 配置
+---
+spring:
+  activemq:
+    broker-url: tcp://192.168.1.151:61616
+# rabbitMq 配置
+---
+spring:
+  rabbitmq:
+    addresses: 192.168.1.151:5672
+    username: guest
+    password: guest
+  redis:
+    port: 6379
+    host: 192.168.1.151
+    timeout: 6000
+
+logging:
+  level:
+    com.ocean.core.module: debug
+
+# 配置shiro 路径权限过滤规则
+---
+shiro:
+  enabled: true
+  permission:
+    # 排除登陆登出相关
+    - urls: /login,/logout,/video
+      permission: anon
+      # 排除静态资源
+    - urls: /static/**,/templates/**
+      permission: anon
+      # 排除Swagger
+    - urls: /docs,/doc.html,/swagger-ui.html,/webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs
+      permission: anon
+      # 排除SpringBootAdmin
+    - urls: /favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**
+      permission: anon
+    - urls: /sys/dict
+      permission: anon
+#jwt配置信息
+---
+jwt:
+  expiredTime: 3600
+  secret: ocean
+
+
+
+
